@@ -1,0 +1,6 @@
+{
+  "name": "Nova Chatbot AI",
+  "description": "Next-generation ChatGPT-style AI companion with multiple model support, chat history, and comprehensive admin control.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
