@@ -7,6 +7,8 @@ android {
   namespace = "com.nova.offline"
   compileSdk { version = release(36) { minorApiLevel = 1 } }
 
+ndkVersion = "29.0.14206865"
+
   defaultConfig {
     applicationId = "com.nova.offline"
     minSdk = 24
