@@ -24,6 +24,10 @@ jobs:
         with:
           gradle-version: '9.3.1'
 
+      - name: Download llama.cpp
+        run: |
+          git clone --depth 1 https://github.com/ggml-org/llama.cpp.git third_party/llama.cpp
+
       - name: Generate debug keystore
         run: |
           keytool -genkeypair \
