@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>NOVA OFFLINE</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- App Container -->
+  <div id="app">
+    <!-- Sidebar Overlay for Mobile -->
+    <div id="sidebar-overlay" class="overlay"></div>
+
+    <!-- Navigation Drawer / Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-row">
+          <div class="nova-logo-badge">
+            <svg class="nova-logo-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="9" stroke="url(#novaGlow)" stroke-width="2"></circle>
+              <path d="M12 3v18M3 12h18M7.05 7.05l9.9 9.9M7.05 16.95l9.9-9.9" stroke="url(#novaGlow)" stroke-width="1.5"></path>
+              <defs>
+                <linearGradient id="novaGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#38BDF8" />
+                  <stop offset="50%" stop-color="#818CF8" />
+                  <stop offset="100%" stop-color="#C084FC" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-title">NOVA</span>
+            <span class="brand-tag">OFFLINE</span>
+          </div>
+        </div>
+        <button id="close-sidebar-btn" class="icon-btn mobile-only" aria-label="Close Drawer">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- New Chat Button -->
+      <div class="sidebar-action">
+        <button id="btn-new-chat" class="btn btn-primary btn-block">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          <span>New Chat</span>
+        </button>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">CHATS</div>
+        <div id="chat-history-list" class="history-list">
+          <!-- Populated dynamically -->
+          <div class="history-empty">No conversation history yet.</div>
+        </div>
+
+        <div class="nav-section-title">WORKSPACE</div>
+        <ul class="nav-links">
+          <li>
+            <button class="nav-link-btn" data-screen="model-manager">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+              <span>Model Manager</span>
+              <span id="nav-model-pill" class="pill pill-warning">None</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link-btn" data-screen="settings">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              <span>Settings</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link-btn" data-screen="about">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+              <span>About NOVA</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        <div class="engine-status-badge">
+          <span class="status-dot status-offline"></span>
+          <span id="footer-engine-text" class="status-label">Offline GGUF Mode</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Navigation Bar -->
+      <header class="top-bar">
+        <div class="top-left">
+          <button id="toggle-sidebar-btn" class="icon-btn" aria-label="Toggle Menu">
+            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" fill="none" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <div class="top-title-area">
+            <h1 id="current-screen-title" class="screen-title">Chat</h1>
+            <span id="model-header-indicator" class="model-pill">No Model Loaded</span>
+          </div>
+        </div>
+
+        <div class="top-right">
+          <button id="top-btn-clear" class="icon-btn" title="Clear conversation" aria-label="Clear Chat">
+            <svg viewBox="0 0 24 24" width="19" height="19" stroke="currentColor" fill="none" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6m5 0V4a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+          <button id="top-btn-models" class="icon-btn" title="Model Manager" aria-label="Models">
+            <svg viewBox="0 0 24 24" width="19" height="19" stroke="currentColor" fill="none" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- SCREEN 1: CHAT SCREEN -->
+      <section id="screen-chat" class="screen-view active">
+        <!-- Messages Container -->
+        <div id="messages-container" class="messages-container">
+          <!-- Hero / Empty State -->
+          <div id="chat-empty-hero" class="chat-hero">
+            <div class="hero-orb">
+              <div class="hero-glow"></div>
+              <div class="hero-ring"></div>
+              <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.8">
+                <circle cx="12" cy="12" r="9" stroke="url(#heroGlow)"></circle>
+                <path d="M12 3v18M3 12h18" stroke="url(#heroGlow)"></path>
+                <defs>
+                  <linearGradient id="heroGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#38BDF8" />
+                    <stop offset="100%" stop-color="#A855F7" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            <h2>NOVA OFFLINE</h2>
+            <p class="hero-subtitle">100% Private On-Device AI • No Cloud • Low RAM Ready</p>
+
+            <div class="suggestion-chips">
+              <button class="chip" data-prompt="Explain how offline LLMs run on mobile phones in simple terms.">
+                <span>📱 How offline LLMs work</span>
+              </button>
+              <button class="chip" data-prompt="Write a Python script for high-performance string tokenization.">
+                <span>🐍 Python tokenization script</span>
+              </button>
+              <button class="chip" data-prompt="Give me a checklist for optimizing GGUF models on 4GB RAM devices.">
+                <span>⚡ 4GB RAM optimization guide</span>
+              </button>
+              <button class="chip" data-prompt="What are the differences between Q4_K_M and Q8_0 quantization?">
+                <span>🧠 Quantization explained</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Chat Message Stream -->
+          <div id="message-list" class="message-list"></div>
+        </div>
+
+        <!-- Sticky Chat Input Bar -->
+        <div class="chat-input-wrapper">
+          <div class="input-container">
+            <textarea
+              id="prompt-input"
+              rows="1"
+              placeholder="Message NOVA Offline... (Enter to send, Shift+Enter for newline)"
+              aria-label="Prompt input"
+            ></textarea>
+
+            <div class="input-actions">
+              <button id="btn-stop-generation" class="btn-stop hidden" aria-label="Stop Generating" title="Stop Generation">
+                <span class="stop-box"></span>
+                <span>Stop</span>
+              </button>
+
+              <button id="btn-send-prompt" class="btn-send" aria-label="Send Message" title="Send Message">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="input-footer-hint">
+            <span>NOVA runs locally on your device CPU/NPU. Zero cloud latency & zero tracking.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN 2: MODEL MANAGER SCREEN -->
+      <section id="screen-model-manager" class="screen-view">
+        <div class="screen-scroll-container">
+          <div class="page-header">
+            <h2>Model Manager</h2>
+            <p>Manage quantized GGUF weights stored in your device's private app sandbox.</p>
+          </div>
+
+          <!-- Current Model Status Card -->
+          <div class="card model-status-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon">🧠</span>
+                <div>
+                  <h3>Active GGUF Model</h3>
+                  <span id="mm-status-badge" class="badge badge-warning">Checking...</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="model-meta-grid">
+                <div class="meta-item">
+                  <label>Filename</label>
+                  <span id="mm-filename" class="meta-val font-mono">None</span>
+                </div>
+                <div class="meta-item">
+                  <label>Model Size</label>
+                  <span id="mm-filesize" class="meta-val">0 MB</span>
+                </div>
+                <div class="meta-item">
+                  <label>GGUF Header</label>
+                  <span id="mm-header-check" class="meta-val">—</span>
+                </div>
+                <div class="meta-item">
+                  <label>Storage Path</label>
+                  <span id="mm-filepath" class="meta-val font-mono text-break">/data/data/com.nova.offline/files/models/</span>
+                </div>
+              </div>
+
+              <!-- Import Progress Bar -->
+              <div id="import-progress-box" class="progress-box hidden">
+                <div class="progress-labels">
+                  <span id="progress-status-text">Importing model file...</span>
+                  <span id="progress-percentage-text">0%</span>
+                </div>
+                <div class="progress-track">
+                  <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="model-actions-row">
+                <button id="btn-import-model" class="btn btn-primary">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                  <span>Import GGUF Model</span>
+                </button>
+                <button id="btn-delete-model" class="btn btn-danger" disabled>
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6m5 0V4a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2"/></svg>
+                  <span>Delete Model</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recommended Models for Low RAM (4GB) Devices -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-icon">⚡</span>
+              <h3>Recommended Models (1–2 GB)</h3>
+            </div>
+            <div class="card-body">
+              <p class="text-muted">Targeted for 4GB RAM Android devices using 4-bit (Q4_K_M) quantization:</p>
+
+              <div class="rec-model-list">
+                <div class="rec-model-item">
+                  <div class="rec-header">
+                    <h4>TinyLlama 1.1B Chat (Q4_K_M)</h4>
+                    <span class="tag tag-green">~670 MB</span>
+                  </div>
+                  <p>Ultra-lightweight model ideal for fast inference on budget Android devices with 2GB–4GB RAM.</p>
+                </div>
+
+                <div class="rec-model-item">
+                  <div class="rec-header">
+                    <h4>Qwen2.5 1.5B Instruct (Q4_K_M)</h4>
+                    <span class="tag tag-blue">~1.1 GB</span>
+                  </div>
+                  <p>State-of-the-art small language model with outstanding coding, logic, and instruction following.</p>
+                </div>
+
+                <div class="rec-model-item">
+                  <div class="rec-header">
+                    <h4>Phi-2 2.7B (Q4_K_M)</h4>
+                    <span class="tag tag-purple">~1.6 GB</span>
+                  </div>
+                  <p>High reasoning density trained on synthetic and textbook data, fits comfortably within 4GB phones.</p>
+                </div>
+              </div>
+
+              <div class="notice-box mt-3">
+                <strong>How to get a GGUF model:</strong>
+                <ol class="guide-steps">
+                  <li>Download any compatible `.gguf` file (e.g. from HuggingFace `TheBloke` or `Qwen` repositories).</li>
+                  <li>Transfer the file to your Android device Downloads or internal storage.</li>
+                  <li>Click <strong>Import GGUF Model</strong> above and select the `.gguf` file.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN 3: SETTINGS SCREEN -->
+      <section id="screen-settings" class="screen-view">
+        <div class="screen-scroll-container">
+          <div class="page-header">
+            <h2>Settings</h2>
+            <p>Fine-tune inference parameters, system persona, and local cache.</p>
+          </div>
+
+          <!-- Mode Card -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-icon">🌐</span>
+              <h3>Operation Mode</h3>
+            </div>
+            <div class="card-body">
+              <div class="setting-row">
+                <div>
+                  <div class="setting-title">Offline GGUF Mode</div>
+                  <div class="setting-desc">100% on-device local computation with no internet dependencies.</div>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="setting-mode-toggle" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Inference Parameters Card -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-icon">🎛️</span>
+              <h3>Inference Parameters</h3>
+            </div>
+            <div class="card-body">
+              <!-- Temperature -->
+              <div class="setting-slider-item">
+                <div class="slider-header">
+                  <label for="setting-temperature">Temperature</label>
+                  <span id="val-temperature" class="slider-val">0.7</span>
+                </div>
+                <input type="range" id="setting-temperature" min="0.1" max="1.5" step="0.05" value="0.7">
+                <div class="slider-hint">Lower values = more focused and deterministic; higher = more creative.</div>
+              </div>
+
+              <!-- Max Tokens -->
+              <div class="setting-slider-item">
+                <div class="slider-header">
+                  <label for="setting-max-tokens">Max Tokens</label>
+                  <span id="val-max-tokens" class="slider-val">512</span>
+                </div>
+                <input type="range" id="setting-max-tokens" min="64" max="2048" step="64" value="512">
+                <div class="slider-hint">Maximum number of response tokens generated per message.</div>
+              </div>
+
+              <!-- Context Length -->
+              <div class="setting-slider-item">
+                <div class="slider-header">
+                  <label for="setting-context-len">Context Window</label>
+                  <span id="val-context-len" class="slider-val">2048</span>
+                </div>
+                <input type="range" id="setting-context-len" min="512" max="4096" step="256" value="2048">
+                <div class="slider-hint">Total context memory tokens allocated in RAM. Lower values conserve memory.</div>
+              </div>
+
+              <!-- System Prompt -->
+              <div class="setting-item mt-3">
+                <label for="setting-system-prompt" class="setting-title">System Prompt</label>
+                <div class="preset-buttons">
+                  <button class="btn-preset" data-preset="assistant">Default Assistant</button>
+                  <button class="btn-preset" data-preset="coder">Code Architect</button>
+                  <button class="btn-preset" data-preset="concise">Concise & Direct</button>
+                  <button class="btn-preset" data-preset="creative">Creative Writer</button>
+                </div>
+                <textarea id="setting-system-prompt" rows="3" class="form-textarea"></textarea>
+              </div>
+
+              <button id="btn-save-settings" class="btn btn-primary mt-3">Save Settings</button>
+            </div>
+          </div>
+
+          <!-- Storage & Danger Zone -->
+          <div class="card danger-card">
+            <div class="card-header">
+              <span class="card-icon">🗑️</span>
+              <h3>Storage & Data Management</h3>
+            </div>
+            <div class="card-body">
+              <div class="danger-row">
+                <div>
+                  <div class="setting-title">Clear Chat History</div>
+                  <div class="setting-desc">Permanently remove all saved conversations from the SQLite database.</div>
+                </div>
+                <button id="btn-clear-all-history" class="btn btn-outline-danger">Clear History</button>
+              </div>
+
+              <div class="danger-row mt-3">
+                <div>
+                  <div class="setting-title">Remove Model Weights</div>
+                  <div class="setting-desc">Delete currently imported GGUF model from app storage.</div>
+                </div>
+                <button id="btn-settings-delete-model" class="btn btn-outline-danger">Delete Model</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN 4: ABOUT SCREEN -->
+      <section id="screen-about" class="screen-view">
+        <div class="screen-scroll-container">
+          <div class="page-header">
+            <h2>About NOVA OFFLINE</h2>
+            <p>Architecture, privacy principles, and system specs.</p>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-icon">🛡️</span>
+              <h3>Autonomous Offline Guarantee</h3>
+            </div>
+            <div class="card-body">
+              <p>NOVA OFFLINE is engineered from the ground up to run entirely on the local device:</p>
+              <ul class="bullet-list">
+                <li><strong>Zero Telemetry:</strong> No analytical trackers, third-party loggers, or cloud pings.</li>
+                <li><strong>Airplane Mode Certified:</strong> Once a GGUF model is loaded, zero network is required.</li>
+                <li><strong>Local SQLite Storage:</strong> All chat records and settings remain strictly in private app storage.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-icon">🏗️</span>
+              <h3>Architectural Flow</h3>
+            </div>
+            <div class="card-body">
+              <div class="flow-diagram">
+                <div class="flow-node">HTML5 / CSS / Vanilla JS</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-node">Android Hardware-Accelerated WebView</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-node">Java WebBridge (window.NOVA)</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-node">LocalAI Interface Layer</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-node">NativeAI (libnova_native.so / llama.cpp)</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-node highlight">Quantized GGUF Model (~1–2 GB)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-icon">📱</span>
+              <h3>Device & App Information</h3>
+            </div>
+            <div class="card-body">
+              <div class="model-meta-grid">
+                <div class="meta-item">
+                  <label>App Name</label>
+                  <span class="meta-val">NOVA OFFLINE</span>
+                </div>
+                <div class="meta-item">
+                  <label>Version</label>
+                  <span id="about-app-version" class="meta-val">1.0</span>
+                </div>
+                <div class="meta-item">
+                  <label>Package</label>
+                  <span class="meta-val font-mono">com.nova.offline</span>
+                </div>
+                <div class="meta-item">
+                  <label>Device</label>
+                  <span id="about-device-model" class="meta-val">Android</span>
+                </div>
+                <div class="meta-item">
+                  <label>OS Release</label>
+                  <span id="about-android-ver" class="meta-val">—</span>
+                </div>
+                <div class="meta-item">
+                  <label>Target Architecture</label>
+                  <span id="about-abi" class="meta-val font-mono">arm64-v8a</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Custom Confirmation Dialog Modal -->
+  <div id="confirm-modal" class="modal-backdrop hidden">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modal-title">Confirm Action</h3>
+      </div>
+      <div class="modal-body">
+        <p id="modal-message">Are you sure you want to proceed?</p>
+      </div>
+      <div class="modal-footer">
+        <button id="modal-btn-cancel" class="btn btn-secondary">Cancel</button>
+        <button id="modal-btn-confirm" class="btn btn-danger">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="settings.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

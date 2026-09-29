@@ -22,6 +22,6 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "Nova Chatbot AI"
+rootProject.name = "NOVA OFFLINE"
 
 include(":app")

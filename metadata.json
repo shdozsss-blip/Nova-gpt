@@ -1,6 +1,6 @@
 {
-  "name": "Nova Chatbot AI",
-  "description": "Next-generation ChatGPT-style AI companion with multiple model support, chat history, and comprehensive admin control.",
+  "name": "NOVA OFFLINE",
+  "description": "Standalone offline AI chatbot powered by local GGUF models with native inference abstraction and WebView UI.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
