@@ -4,7 +4,7 @@ project("nova_native")
 
 # llama.cpp location
 set(LLAMA_DIR
-    "${CMAKE_CURRENT_LIST_DIR}/../../../../../../third_party/llama.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../third_party/llama.cpp"
 )
 
 # Make sure llama.cpp was downloaded
