@@ -71,6 +71,7 @@ public class NativeAI implements LocalAI {
         if (sLibraryLoaded && !sNativeInitialized) {
 
             try {
+
                 sNativeInitialized = nativeInit();
 
                 Log.i(
@@ -94,13 +95,26 @@ public class NativeAI implements LocalAI {
 
 
     @Override
+    public boolean isReady() {
+        return sLibraryLoaded && sNativeInitialized;
+    }
+
+
+    @Override
+    public boolean isModelLoaded() {
+        return mIsModelLoaded;
+    }
+
+
+    @Override
     public boolean loadModel(
             String modelPath,
             int contextLength,
             int nThreads
     ) {
 
-        if (modelPath == null || modelPath.trim().isEmpty()) {
+        if (modelPath == null ||
+                modelPath.trim().isEmpty()) {
 
             Log.e(TAG, "Model path is empty.");
 
@@ -120,7 +134,8 @@ public class NativeAI implements LocalAI {
                         : 4;
 
 
-        if (!sLibraryLoaded || !sNativeInitialized) {
+        if (!sLibraryLoaded ||
+                !sNativeInitialized) {
 
             Log.e(
                     TAG,
@@ -151,11 +166,12 @@ public class NativeAI implements LocalAI {
             );
 
 
-            boolean success = nativeLoadModel(
-                    modelPath,
-                    mContextLength,
-                    mThreads
-            );
+            boolean success =
+                    nativeLoadModel(
+                            modelPath,
+                            mContextLength,
+                            mThreads
+                    );
 
 
             mIsModelLoaded = success;
@@ -199,7 +215,9 @@ public class NativeAI implements LocalAI {
 
         try {
 
-            if (sLibraryLoaded && sNativeInitialized) {
+            if (sLibraryLoaded &&
+                    sNativeInitialized) {
+
                 nativeUnloadModel();
             }
 
@@ -218,22 +236,21 @@ public class NativeAI implements LocalAI {
 
 
     @Override
-    public boolean isModelLoaded() {
-        return mIsModelLoaded;
-    }
-
-
-    @Override
     public void generate(
             String prompt,
             String systemPrompt,
             float temperature,
             int maxTokens,
-            TokenCallback callback
+            GenerationCallback callback
     ) {
 
         if (callback == null) {
-            Log.e(TAG, "TokenCallback is null.");
+
+            Log.e(
+                    TAG,
+                    "GenerationCallback is null."
+            );
+
             return;
         }
 
@@ -312,7 +329,9 @@ public class NativeAI implements LocalAI {
 
                                 mGenerating.set(false);
 
-                                callback.onComplete();
+                                callback.onComplete(
+                                        ""
+                                );
                             }
 
 
@@ -398,19 +417,23 @@ public class NativeAI implements LocalAI {
 
 
     @Override
-    public String getModelPath() {
-        return mModelPath;
-    }
+    public String getStatusMessage() {
 
+        if (!sLibraryLoaded) {
 
-    @Override
-    public int getContextLength() {
-        return mContextLength;
-    }
+            return "Native inference library is not loaded.";
+        }
 
+        if (!sNativeInitialized) {
 
-    @Override
-    public boolean isGenerating() {
-        return mGenerating.get();
+            return "Native inference engine is not initialized.";
+        }
+
+        if (!mIsModelLoaded) {
+
+            return "Native engine ready, but no GGUF model is loaded.";
+        }
+
+        return "NOVA offline AI is ready.";
     }
 }
