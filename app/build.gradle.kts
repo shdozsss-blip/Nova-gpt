@@ -19,6 +19,10 @@ ndkVersion = "29.0.14206865"
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
+ndk {
+  abiFilters += listOf("arm64-v8a")
+}
+
   signingConfigs {
     create("release") {
       val keystorePath = System.getenv("KEYSTORE_PATH") ?: "${rootDir}/my-upload-key.jks"
